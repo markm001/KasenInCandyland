@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scenes/Barrage_Spawner.tscn" type="PackedScene" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
+
+[node name="Enemy" type="KinematicBody2D"]
+
+[node name="EnemySprite" type="AnimatedSprite" parent="."]
+
+[node name="TMP SPRITE2" type="TextureRect" parent="EnemySprite"]
+margin_left = -32.0
+margin_top = -32.0
+margin_right = 32.0
+margin_bottom = 32.0
+rect_pivot_offset = Vector2( -32, -32 )
+texture = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="SpawnerContainer" type="Position2D" parent="."]
+
+[node name="Barrage_Spawner" parent="SpawnerContainer" instance=ExtResource( 1 )]

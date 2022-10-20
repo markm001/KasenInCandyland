@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/Targeted_Spawner.gd" type="Script" id=1]
+
+[node name="Targeted_Spawner" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+
+[node name="Spawn_Timer" type="Timer" parent="."]
+
+[connection signal="timeout" from="Spawn_Timer" to="." method="_on_Spawn_Timer_timeout"]
