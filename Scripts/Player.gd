@@ -8,20 +8,26 @@ export var focus_speed = 150;
 export var friction = 1800;
 var velocity = Vector2.ZERO;
 
-export var fire_rate = 0.4;
+export var special_fire_rate = 2;
 export var radius = 10;
 
-onready var spawner_spawnTimer = $Targeted_Spawner/Spawn_Timer;
+onready var spawner_spawnTimer:Timer = $Targeted_Spawner/Spawn_Timer;
+onready var special_Timer = $SpecialTimer;
 onready var animation_state = $AnimationTree.get("parameters/playback");
-onready var animationTree = $AnimationTree;
+onready var animationTree:AnimationTree = $AnimationTree;
+onready var spawner:Node2D = $Targeted_Spawner;
 
 func _ready():
 	GlobalData.set_player_node(self);
 
 func _input(event):
 	if(event.is_action_pressed("focus")):
+		$Sprite/Hitbox.show();
+		spawner.is_focused = true;
 		is_focused = true;
 	if(event.is_action_released("focus")):
+		$Sprite/Hitbox.hide();
+		spawner.is_focused = false;
 		is_focused = false;
 	
 	if(event.is_action_pressed("switch_mode")):
@@ -33,13 +39,15 @@ func _input(event):
 	
 	if(event.is_action_pressed("fire")):
 		is_firing = true;
-		spawner_spawnTimer.start(fire_rate);
+		spawner_spawnTimer.start();
 	if(event.is_action_released("fire")):
 		is_firing = false;
 		spawner_spawnTimer.stop();
 		
 	if(event.is_action_pressed("special")):
-		print("FIRING SPECIAL!!! PEW PEW!")
+		if(special_Timer.is_stopped()):
+			special_Timer.start(special_fire_rate);
+			print("FIRING SPECIAL!!! PEW PEW!")
 
 func _process(delta):
 	var input_vector = Vector2.ZERO;
