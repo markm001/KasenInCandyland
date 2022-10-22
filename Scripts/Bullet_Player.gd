@@ -65,11 +65,3 @@ func delete():
 
 func set_Sprite(texture:Texture):
 	$Sprite.texture = texture;
-
-
-func _on_Bullet_body_entered(body):
-	if(body.name == "Player"):
-		if(bullet_type == body.absorb_type):
-			GlobalData.increase_gauge(bullet_type);
-		else:
-			GlobalData.reduce_gauge(bullet_type);

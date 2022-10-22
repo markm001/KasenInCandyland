@@ -1,12 +1,14 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Scenes/Enemy.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scenes/Bullet_Timed.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scripts/Controller.gd" type="Script" id=4]
+[ext_resource path="res://Scenes/SpawnerElement.tscn" type="PackedScene" id=5]
 
 [node name="Game_View" type="Node2D"]
 script = ExtResource( 4 )
+case = 2
 
 [node name="Play_Bounds" type="ColorRect" parent="."]
 margin_right = 300.0
@@ -25,7 +27,7 @@ position = Vector2( 150, 90 )
 
 [node name="BulletContainer" type="Position2D" parent="Elements"]
 
-[node name="Bullet" parent="Elements/BulletContainer" instance=ExtResource( 3 )]
+[node name="Bullet DBUG" parent="Elements/BulletContainer" instance=ExtResource( 3 )]
 
 [node name="PlayerBulletContainer" type="Position2D" parent="Elements"]
 
@@ -47,3 +49,6 @@ margin_right = 280.0
 margin_bottom = 24.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="SpawnerElement" parent="." instance=ExtResource( 5 )]
+spawn_next_enemy_after = 0.6

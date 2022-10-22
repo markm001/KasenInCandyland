@@ -17,8 +17,10 @@ onready var animation_state = $AnimationTree.get("parameters/playback");
 onready var animationTree:AnimationTree = $AnimationTree;
 onready var spawner:Node2D = $Targeted_Spawner;
 
+export var bound_add:int = 7;
+
 func _ready():
-	GlobalData.set_player_node(self);
+	GlobalData.set_player_node(self)
 
 func _input(event):
 	if(event.is_action_pressed("focus")):
@@ -50,6 +52,9 @@ func _input(event):
 			print("FIRING SPECIAL!!! PEW PEW!")
 
 func _process(delta):
+	self.global_position.x = clamp(self.global_position.x, bound_add, GlobalData.get_viewport_size().x -bound_add);
+	self.global_position.y = clamp(self.global_position.y, bound_add, GlobalData.get_viewport_size().y -bound_add);
+	
 	var input_vector = Vector2.ZERO;
 	
 	input_vector.x = Input.get_action_strength("move_right") - Input.get_action_strength("move_Left");

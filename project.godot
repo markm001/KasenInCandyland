@@ -17,6 +17,8 @@ config/icon="res://icon.png"
 [autoload]
 
 GlobalData="*res://Scripts/Global_Data.gd"
+MechanicsData="*res://Scripts/Data/MechanicsData.gd"
+EnemyData="*res://Scripts/Data/EnemyData.gd"
 
 [display]
 

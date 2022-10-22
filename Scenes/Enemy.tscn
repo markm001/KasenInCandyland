@@ -1,10 +1,20 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Scenes/Barrage_Spawner.tscn" type="PackedScene" id=1]
 [ext_resource path="res://icon.png" type="Texture" id=2]
 [ext_resource path="res://Scenes/Targeted_Spawner.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/Field_Spawner.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Scripts/Enemy.gd" type="Script" id=6]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 29.8329
 
 [node name="Enemy" type="KinematicBody2D"]
+script = ExtResource( 6 )
+acceleration = 100.0
+max_speed = 1000
+move_point = Vector2( 0, -100 )
+offset_facing = 0.0
 
 [node name="EnemySprite" type="AnimatedSprite" parent="."]
 
@@ -21,5 +31,36 @@ texture = ExtResource( 2 )
 [node name="SpawnerContainer" type="Position2D" parent="."]
 
 [node name="Barrage_Spawner" parent="SpawnerContainer" instance=ExtResource( 1 )]
+rotation_speed = 40
+minRotation = 0
+velocity = 3
+acceleration = 5.0
+rotation_change = -40
 
 [node name="Targeted_Spawner" parent="SpawnerContainer" instance=ExtResource( 3 )]
+add_rotation = true
+radius = 50
+acceleration = 0.9
+
+[node name="Field_Spawner" parent="SpawnerContainer" instance=ExtResource( 4 )]
+spawnRate = 100.0
+special_direction = Vector2( 0, 1 )
+special_time = 1.0
+magnitude = 2
+height = 100
+
+[node name="MovementTween" type="Tween" parent="."]
+
+[node name="MechanicsTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 0
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource( 1 )
+
+[connection signal="tween_all_completed" from="MovementTween" to="." method="_on_MovementTween_tween_all_completed"]
+[connection signal="area_shape_entered" from="Area2D" to="." method="_on_Area2D_area_shape_entered"]

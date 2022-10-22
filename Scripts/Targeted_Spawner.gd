@@ -10,14 +10,15 @@ export var rotation_change:int = 40;
 export(float, 0, 1, .001) var bullet_rotation_speed:float = 0;
 export(float, 0, 1, .001) var orbital_velocity:float = 0;
 
-export var fire_rate:float = 0.08;
+export var spawnRate:float = 0.08;
 export var spawn_points:int = 2;
 export var radius:int = 20;
-export var min_rotation:int = 0;
-export var max_rotation:int = 360;
-export var bullet_velocity:int = 200;
+export var minRotation:int = 0;
+export var maxRotation:int = 360;
+export var velocity:int = 200;
 export var acceleration:float = 0.1;
-
+export var target_player_pos:bool = false;
+export var target_player_dir:bool = true;
 
 var direction:Vector2 = Vector2();
 
@@ -25,31 +26,27 @@ var spawner_positions:Array = [];
 
 onready var spawnTimer:Timer = $Spawn_Timer;
 onready var player_bullet:Texture = preload("res://Visuals/player_bullet.png");
-
+export var offset = 0;
 func _ready():
 	if(is_player):
 		direction = Vector2.UP;
-		spawnTimer.wait_time = fire_rate;
+		spawnTimer.wait_time = spawnRate;
 	
 	else: ## DEBUG: REMOVE LATER!
+		target_player_dir = true;
 		spawnTimer.start();
 
 
-func _process(delta):
-	if(!is_player):
-		var playerdir = (GlobalData.get_player_node().position - self.global_position).normalized()
-		self.rotation_degrees = rad2deg(playerdir.angle())
-
-func calc_positions() -> void:
-	spawner_positions.clear();
-	for n in range(spawn_points):
-		var fraction:float = n / spawn_points;
-		var difference:int = max_rotation - min_rotation;
-		spawner_positions.append((fraction * difference) + min_rotation);
-
 func instance_bullets(i:int, theta:float):
 	var bullet:Area2D = bullet_scene.instance();
-	var angle:float = (theta * i) + self.rotation + deg2rad(min_rotation);
+	var angle:float = (theta * i) + self.rotation + deg2rad(minRotation);
+	
+	if target_player_dir:
+		var diff = deg2rad(maxRotation - minRotation) / spawn_points;
+		
+		var playerdir = (GlobalData.get_player_node().position - self.global_position).normalized();
+		angle = (theta * i) + (playerdir.angle() - diff);
+	
 	var direction:Vector2 = Vector2.ZERO;
 	
 	if(is_player):
@@ -65,7 +62,7 @@ func instance_bullets(i:int, theta:float):
 		
 		bullet.global_position = self.global_position + (direction.normalized()) * radius;
 		
-		bullet.velocity = bullet_velocity;
+		bullet.velocity = velocity;
 		bullet.direction = Vector2.UP;
 		bullet.rotation = angle;
 		bullet.acceleration = acceleration;
@@ -78,16 +75,19 @@ func instance_bullets(i:int, theta:float):
 		
 		bullet.global_position = self.global_position + (direction.normalized()) * radius;
 		
+		if(target_player_pos):
+			direction = (GlobalData.get_player_node().position - self.global_position).normalized();
+		
 		bullet.direction = direction;
 		bullet.rotation = angle;
-		bullet.set_properties(bullet_type, bullet_velocity, acceleration, add_rotation, rotation_change, bullet_rotation_speed, orbital_velocity);
+		bullet.set_properties(bullet_type, velocity, acceleration, add_rotation, rotation_change, bullet_rotation_speed, orbital_velocity);
 	
 	GlobalData.bullet_array.append(bullet);
 
 func _on_Spawn_Timer_timeout():
-	spawnTimer.wait_time = fire_rate;
+	spawnTimer.wait_time = spawnRate;
 	
-	var diff:int = max_rotation - min_rotation;
+	var diff:int = maxRotation - minRotation;
 	var circ:float = deg2rad(diff);
 	var t:float = (circ / spawn_points);
 	
