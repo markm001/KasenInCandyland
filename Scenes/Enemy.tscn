@@ -1,66 +1,82 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=13 format=2]
 
-[ext_resource path="res://Scenes/Barrage_Spawner.tscn" type="PackedScene" id=1]
-[ext_resource path="res://icon.png" type="Texture" id=2]
-[ext_resource path="res://Scenes/Targeted_Spawner.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Scenes/Field_Spawner.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Visuals/PumpkinSpriteSheet0001.png" type="Texture" id=2]
 [ext_resource path="res://Scripts/Enemy.gd" type="Script" id=6]
 
-[sub_resource type="CircleShape2D" id=1]
-radius = 29.8329
+[sub_resource type="AtlasTexture" id=2]
+atlas = ExtResource( 2 )
+region = Rect2( 0, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = ExtResource( 2 )
+region = Rect2( 64, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=4]
+atlas = ExtResource( 2 )
+region = Rect2( 128, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=5]
+atlas = ExtResource( 2 )
+region = Rect2( 192, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=6]
+atlas = ExtResource( 2 )
+region = Rect2( 256, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=7]
+atlas = ExtResource( 2 )
+region = Rect2( 320, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=8]
+atlas = ExtResource( 2 )
+region = Rect2( 384, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=9]
+atlas = ExtResource( 2 )
+region = Rect2( 448, 0, 64, 64 )
+
+[sub_resource type="SpriteFrames" id=10]
+animations = [ {
+"frames": [ SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ), SubResource( 7 ), SubResource( 8 ), SubResource( 9 ) ],
+"loop": true,
+"name": "Pumpkin",
+"speed": 6.0
+} ]
+
+[sub_resource type="CircleShape2D" id=11]
+radius = 14.0357
 
 [node name="Enemy" type="KinematicBody2D"]
+collision_layer = 2
+collision_mask = 0
 script = ExtResource( 6 )
+hp = 10
 acceleration = 100.0
 max_speed = 1000
 move_point = Vector2( 0, -100 )
 offset_facing = 0.0
 
-[node name="EnemySprite" type="AnimatedSprite" parent="."]
-
-[node name="TMP SPRITE2" type="TextureRect" parent="EnemySprite"]
-margin_left = -32.0
-margin_top = -32.0
-margin_right = 32.0
-margin_bottom = 32.0
-rect_pivot_offset = Vector2( -32, -32 )
-texture = ExtResource( 2 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-
 [node name="SpawnerContainer" type="Position2D" parent="."]
-
-[node name="Barrage_Spawner" parent="SpawnerContainer" instance=ExtResource( 1 )]
-rotation_speed = 40
-minRotation = 0
-velocity = 3
-acceleration = 5.0
-rotation_change = -40
-
-[node name="Targeted_Spawner" parent="SpawnerContainer" instance=ExtResource( 3 )]
-add_rotation = true
-radius = 50
-acceleration = 0.9
-
-[node name="Field_Spawner" parent="SpawnerContainer" instance=ExtResource( 4 )]
-spawnRate = 100.0
-special_direction = Vector2( 0, 1 )
-special_time = 1.0
-magnitude = 2
-height = 100
 
 [node name="MovementTween" type="Tween" parent="."]
 
 [node name="MechanicsTimer" type="Timer" parent="."]
-autostart = true
+one_shot = true
 
-[node name="Area2D" type="Area2D" parent="."]
-collision_layer = 2
-collision_mask = 0
-monitorable = false
+[node name="EnemySprite" type="AnimatedSprite" parent="."]
+scale = Vector2( 0.5, 0.5 )
+frames = SubResource( 10 )
+animation = "Pumpkin"
+playing = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-shape = SubResource( 1 )
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+position = Vector2( 0, 3 )
+scale = Vector2( 0.8, 0.8 )
 
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 11 )
+
+[connection signal="hp_depleted" from="." to="." method="_on_Enemy_hp_depleted"]
 [connection signal="tween_all_completed" from="MovementTween" to="." method="_on_MovementTween_tween_all_completed"]
-[connection signal="area_shape_entered" from="Area2D" to="." method="_on_Area2D_area_shape_entered"]
+[connection signal="timeout" from="MechanicsTimer" to="." method="_on_MechanicsTimer_timeout"]
+[connection signal="screen_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]

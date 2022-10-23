@@ -8,19 +8,26 @@ export var focus_speed = 150;
 export var friction = 1800;
 var velocity = Vector2.ZERO;
 
+var is_dead = false;
+
 export var special_fire_rate = 2;
 export var radius = 10;
 
-onready var spawner_spawnTimer:Timer = $Targeted_Spawner/Spawn_Timer;
+onready var spawner_spawnTimer:Timer = $Targeted_Spawner/SpawnTimer;
 onready var special_Timer = $SpecialTimer;
 onready var animation_state = $AnimationTree.get("parameters/playback");
 onready var animationTree:AnimationTree = $AnimationTree;
 onready var spawner:Node2D = $Targeted_Spawner;
 
+var colorKoutei = Color(0,1,0,0.5);
+var colorRaijuu = Color(0.0,0.4,1,0.8);
+
 export var bound_add:int = 7;
 
 func _ready():
 	GlobalData.set_player_node(self)
+	GlobalData.set_active_type(absorb_type);
+	GlobalData.increase_gauge(absorb_type);
 
 func _input(event):
 	if(event.is_action_pressed("focus")):
@@ -35,8 +42,12 @@ func _input(event):
 	if(event.is_action_pressed("switch_mode")):
 		if(absorb_type == 1):
 			absorb_type = 0;
+			$Sprite.material.set("shader_param/outline_color", colorRaijuu);
+			GlobalData.set_active_type(absorb_type);
 		else:
 			absorb_type = 1;
+			$Sprite.material.set("shader_param/outline_color", colorKoutei);
+			GlobalData.set_active_type(absorb_type);
 		print(absorb_type);
 	
 	if(event.is_action_pressed("fire")):
@@ -52,6 +63,9 @@ func _input(event):
 			print("FIRING SPECIAL!!! PEW PEW!")
 
 func _process(delta):
+	if(is_dead):
+		return
+	
 	self.global_position.x = clamp(self.global_position.x, bound_add, GlobalData.get_viewport_size().x -bound_add);
 	self.global_position.y = clamp(self.global_position.y, bound_add, GlobalData.get_viewport_size().y -bound_add);
 	
@@ -79,3 +93,10 @@ func _process(delta):
 		velocity = velocity.move_toward(Vector2.ZERO, friction * delta);
 	
 	velocity = move_and_slide(velocity);
+
+func take_damage():
+	$CollisionShape2D.set_deferred("disabled", false);
+	$AnimationPlayer.play("Player_Hurt");
+
+func _inincibility_finished():
+	$CollisionShape2D.disabled = false;

@@ -10,6 +10,8 @@ func _ready():
 #		"type" : "Wheel",
 		"spawnerType": "Barrage_Spawner",
 		"spawnRate": 0.1,
+		"radius": 10,
+		"spawnPoints":4,
 		"velocity": 3,
 		"acceleration": 5,
 		"rotation_speed": 40
@@ -18,6 +20,7 @@ func _ready():
 #		"type" : "Fork",
 		"spawnerType": "Targeted_Spawner",
 		"spawnRate": 0.2,
+		"spawnPoints":2,
 		"velocity": 180,
 		"acceleration": 0.9,
 		"minRotation": 300,
@@ -28,6 +31,7 @@ func _ready():
 #		"type" : "T",
 		"spawnerType": "Targeted_Spawner",
 		"spawnRate": 0.2,
+		"spawnPoints":3,
 		"velocity": 180,
 		"acceleration": -0.9,
 		"minRotation": 80
@@ -36,6 +40,7 @@ func _ready():
 #		"type" : "Star",
 		"spawnerType": "Barrage_Spawner",
 		"spawnRate": 0.1,
+		"spawnPoints":6,
 		"velocity": 50,
 		"acceleration": 3.5,
 		"rotation_speed": 40
@@ -44,6 +49,7 @@ func _ready():
 #		"type" : "OneEighty",
 		"spawnerType": "Barrage_Spawner",
 		"spawnRate": 0.15,
+		"spawnPoints":5,
 		"velocity": 250,
 		"acceleration": 0.5
 	};
@@ -51,6 +57,7 @@ func _ready():
 #		"type" : "SingleTarget",
 		"spawnerType": "Targeted_Spawner",
 		"spawnRate": 0.2,
+		"spawnPoints":1,
 		"velocity": 300,
 		"acceleration": 0.3
 	};
@@ -58,6 +65,7 @@ func _ready():
 #		"type" : "Tris",
 		"spawnerType": "Barrage_Spawner",
 		"spawnRate": 0.8,
+		"spawnPoints":4,
 		"velocity": 200,
 		"acceleration": 0.1
 	};

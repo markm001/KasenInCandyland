@@ -40,10 +40,6 @@ export(int, 0, 720, 1) var height:int = 0;
 export(int, -360, 360, 10) var dist_bullet_rotation = -90;
 export var random_rotation = false;
 var j = 0;
-
-func _ready():
-	# ## DEBUG: REMOVE LATER!
-	$SpawnTimer.start();
 	
 func _process(delta):
 	if(speed_up):
@@ -71,6 +67,10 @@ func _distribute_bullets():
 		random_coord.y = (extension * sin(j * amplitude) + (j * magnitude)) + height;
 		
 		var bullet:Area2D = bullet_scene.instance();
+		
+		if(bullet_type): # 1 = Koutei
+			bullet.modulate_Sprite_Color(GlobalData.kouteiColor);
+		
 		GlobalData.get_e_bullet_container().add_child(bullet);
 		GlobalData.bullet_array.append(bullet);
 		
@@ -95,3 +95,12 @@ func _distribute_bullets():
 		bullet.set_properties(bullet_type, hover_vel, hover_accel, lifetime, enable_hover_rotation, hover_rotation_change, bullet_rotation_speed, orbital_hover);
 		
 		bullet.append_special(special_direction, rand_range(special_time, special_time + 0.5));
+
+func set_bullet_type(type:int):
+	self.bullet_type = type;
+
+func enable():
+	$SpawnTimer.start();
+
+func disable():
+	$SpawnTimer.stop();

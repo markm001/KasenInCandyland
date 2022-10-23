@@ -11,8 +11,20 @@ var player_bullet_container setget set_player_bullet_container, get_player_bulle
 var global_viewport_size setget set_viewport_size, get_viewport_size;
 var enemy_container setget set_enemy_container, get_enemy_container;
 
-var raijuu_gauge:int = 0;
-var koutai_gauge:int = 1;
+var raijuu_gauge:int = 4;
+var koutai_gauge:int = 5;
+
+var raijuuBurst = preload("res://Scenes/VFX/LightningBurstEffect.tscn");
+var kouteiBurst = preload("res://Scenes/VFX/WindBurstEffect.tscn");
+var successParticles = preload("res://Scenes/VFX/SuccessParticles.tscn");
+var enemyDeathEffect = preload("res://Scenes/VFX/EnemyDeathEffect.tscn")
+
+var kouteiColor:Color = Color(0,1,0);
+var active_type setget set_active_type, get_active_type;
+
+signal gauge_updated;
+signal type_changed;
+
 
 func set_e_bullet_container(node:Position2D):
 	e_bullet_container = node;
@@ -39,13 +51,13 @@ func set_enemy_container(node:YSort):
 func get_enemy_container() -> YSort:
 	return enemy_container;
 
-
 func increase_gauge(type:int):
 	match type:
 		0: #Raijuu
 			raijuu_gauge += 1
 		1: #Koutei
 			koutai_gauge += 1
+	emit_signal("gauge_updated", raijuu_gauge, koutai_gauge);
 
 func reduce_gauge(type:int):
 	match type:
@@ -53,3 +65,23 @@ func reduce_gauge(type:int):
 			raijuu_gauge -= 1
 		1: #Koutei
 			koutai_gauge -= 1
+	emit_signal("gauge_updated", raijuu_gauge, koutai_gauge);
+
+
+func get_raijuu_burst_effect() -> Object:
+	return raijuuBurst;
+func get_koutei_burst_effect() -> Object:
+	return kouteiBurst;
+func get_success_effect() -> Object:
+	return successParticles;
+
+
+func set_active_type(type:int):
+	active_type = type;
+	emit_signal("type_changed", active_type);
+func get_active_type() -> int:
+	return active_type;
+
+func reset_properties():
+	raijuu_gauge = 4;
+	koutai_gauge = 5;

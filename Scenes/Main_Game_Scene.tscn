@@ -1,9 +1,23 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Scripts/FpsLabel.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/Game_Window.tscn" type="PackedScene" id=2]
-[ext_resource path="res://icon.png" type="Texture" id=3]
+[ext_resource path="res://Visuals/KasenPumpkinlandLogo005.2.png" type="Texture" id=3]
 [ext_resource path="res://Visuals/FS013_Night_Moonless.png" type="Texture" id=4]
+[ext_resource path="res://Scripts/UI/GaugeElement.gd" type="Script" id=5]
+[ext_resource path="res://Scenes/VFX/GaugeTheme.tres" type="Theme" id=6]
+[ext_resource path="res://Scenes/VFX/Gauge_Kou_BG_Style.tres" type="StyleBox" id=7]
+[ext_resource path="res://Scenes/VFX/Gauge_Kou_Style.tres" type="StyleBox" id=8]
+[ext_resource path="res://Visuals/GameGaugeRectangular2201.2.png" type="Texture" id=9]
+[ext_resource path="res://Visuals/ThunderCutie01.png" type="Texture" id=10]
+[ext_resource path="res://Visuals/DragonCutie001.png" type="Texture" id=11]
+[ext_resource path="res://Scripts/UI/Game_UI.gd" type="Script" id=12]
+[ext_resource path="res://Scenes/Tooltip.gd" type="Script" id=13]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.313726, 0.792157, 1, 1 )
+border_color = Color( 0.8, 0.8, 0.8, 0 )
+corner_radius_top_left = 40
 
 [node name="World" type="CanvasLayer"]
 
@@ -23,6 +37,7 @@ margin_left = 480.0
 margin_top = 40.0
 margin_right = 520.0
 margin_bottom = 80.0
+script = ExtResource( 12 )
 
 [node name="Scores" type="HBoxContainer" parent="UI/Game_UI"]
 margin_right = 136.0
@@ -73,60 +88,41 @@ margin_bottom = 50.0
 text = "128"
 
 [node name="SkillContainer" type="VBoxContainer" parent="UI/Game_UI"]
-margin_top = 150.0
+margin_top = 220.0
 margin_right = 148.0
-margin_bottom = 282.0
+margin_bottom = 284.0
 custom_constants/separation = 20
-
-[node name="CenterContainer" type="CenterContainer" parent="UI/Game_UI/SkillContainer"]
-margin_right = 148.0
-margin_bottom = 64.0
-
-[node name="Gauges" type="HBoxContainer" parent="UI/Game_UI/SkillContainer/CenterContainer"]
-margin_left = 10.0
-margin_right = 138.0
-margin_bottom = 64.0
-custom_constants/separation = 0
-
-[node name="Skill_Tiger" type="TextureRect" parent="UI/Game_UI/SkillContainer/CenterContainer/Gauges"]
-modulate = Color( 0.4, 0.4, 0.4, 1 )
-margin_right = 64.0
-margin_bottom = 64.0
-texture = ExtResource( 3 )
-
-[node name="Skill_Tiger2" type="TextureRect" parent="UI/Game_UI/SkillContainer/CenterContainer/Gauges"]
-modulate = Color( 0.4, 0.4, 0.4, 1 )
-margin_left = 64.0
-margin_right = 128.0
-margin_bottom = 64.0
-texture = ExtResource( 3 )
 
 [node name="Skill_Buttons" type="HBoxContainer" parent="UI/Game_UI/SkillContainer"]
-margin_top = 84.0
 margin_right = 148.0
-margin_bottom = 148.0
-custom_constants/separation = 20
+margin_bottom = 64.0
+custom_constants/separation = 10
 
-[node name="Skill_Tiger" type="TextureRect" parent="UI/Game_UI/SkillContainer/Skill_Buttons"]
-modulate = Color( 0.4, 0.4, 0.4, 1 )
+[node name="Skill_Raijuu" type="TextureRect" parent="UI/Game_UI/SkillContainer/Skill_Buttons"]
 margin_right = 64.0
 margin_bottom = 64.0
-texture = ExtResource( 3 )
+rect_min_size = Vector2( 64, 64 )
+texture = ExtResource( 10 )
+expand = true
+stretch_mode = 5
 
 [node name="Skill_Dragon" type="TextureRect" parent="UI/Game_UI/SkillContainer/Skill_Buttons"]
-modulate = Color( 0, 0.627451, 0.172549, 1 )
-margin_left = 84.0
-margin_right = 148.0
+margin_left = 74.0
+margin_right = 138.0
 margin_bottom = 64.0
-texture = ExtResource( 3 )
+rect_min_size = Vector2( 64, 64 )
+texture = ExtResource( 11 )
+expand = true
+stretch_mode = 5
 
 [node name="Logo" type="TextureRect" parent="UI"]
-margin_left = 20.0
-margin_top = 80.0
-margin_right = 84.0
-margin_bottom = 144.0
-rect_scale = Vector2( 2, 3 )
+margin_left = 10.0
+margin_top = 100.0
+margin_right = 160.0
+margin_bottom = 250.0
+rect_clip_content = true
 texture = ExtResource( 3 )
+expand = true
 
 [node name="ViewportContainer" type="ViewportContainer" parent="."]
 margin_left = 170.0
@@ -142,10 +138,73 @@ render_target_update_mode = 3
 [node name="Game_View" parent="ViewportContainer/Viewport" instance=ExtResource( 2 )]
 
 [node name="FpsLabel" type="Label" parent="."]
-margin_left = 580.0
+margin_left = 10.0
 margin_top = 320.0
-margin_right = 629.0
+margin_right = 59.0
 margin_bottom = 351.0
 text = "30 FPS
 Bullets:"
 script = ExtResource( 1 )
+
+[node name="GaugeElement" type="Control" parent="."]
+anchor_left = -0.038
+anchor_top = 0.014
+anchor_right = -0.038
+anchor_bottom = 0.014
+margin_left = 556.32
+margin_top = 238.96
+margin_right = 596.32
+margin_bottom = 278.96
+script = ExtResource( 5 )
+
+[node name="RaiGauge" type="ProgressBar" parent="GaugeElement"]
+margin_left = 1.0
+margin_right = 131.0
+margin_bottom = 16.0
+rect_rotation = -90.0
+theme = ExtResource( 6 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_styles/fg = SubResource( 1 )
+custom_styles/bg = ExtResource( 7 )
+max_value = 10.0
+step = 1.0
+value = 5.0
+percent_visible = false
+
+[node name="KouGauge" type="ProgressBar" parent="GaugeElement"]
+margin_left = 27.0
+margin_right = 157.0
+margin_bottom = 16.0
+rect_rotation = -90.0
+theme = ExtResource( 6 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_styles/fg = ExtResource( 8 )
+custom_styles/bg = ExtResource( 7 )
+max_value = 10.0
+step = 1.0
+value = 5.0
+percent_visible = false
+
+[node name="GaugeCover" type="TextureRect" parent="GaugeElement"]
+margin_left = -27.0
+margin_top = -137.0
+margin_right = 114.0
+margin_bottom = 95.0
+rect_scale = Vector2( 0.7, 0.7 )
+texture = ExtResource( 9 )
+
+[node name="Tooltip" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 13 )
+
+[node name="CenterContainer" type="CenterContainer" parent="Tooltip"]
+margin_right = 640.0
+margin_bottom = 360.0
+
+[node name="Label" type="Label" parent="Tooltip/CenterContainer"]
+margin_left = 191.0
+margin_top = 173.0
+margin_right = 449.0
+margin_bottom = 187.0
+text = "USE SPACE TO SWITCH BETWEEN MODES"

@@ -65,3 +65,9 @@ func delete():
 
 func set_Sprite(texture:Texture):
 	$Sprite.texture = texture;
+
+
+func _on_Bullet_body_entered(body):
+	if(body.name == "Enemy"):
+		body.take_damage();
+		self.queue_free();

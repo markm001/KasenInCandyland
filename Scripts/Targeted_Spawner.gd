@@ -11,7 +11,7 @@ export(float, 0, 1, .001) var bullet_rotation_speed:float = 0;
 export(float, 0, 1, .001) var orbital_velocity:float = 0;
 
 export var spawnRate:float = 0.08;
-export var spawn_points:int = 2;
+export var spawnPoints:int = 2;
 export var radius:int = 20;
 export var minRotation:int = 0;
 export var maxRotation:int = 360;
@@ -24,7 +24,7 @@ var direction:Vector2 = Vector2();
 
 var spawner_positions:Array = [];
 
-onready var spawnTimer:Timer = $Spawn_Timer;
+onready var spawnTimer:Timer = $SpawnTimer;
 onready var player_bullet:Texture = preload("res://Visuals/player_bullet.png");
 export var offset = 0;
 func _ready():
@@ -36,13 +36,17 @@ func _ready():
 		target_player_dir = true;
 		spawnTimer.start();
 
-
 func instance_bullets(i:int, theta:float):
 	var bullet:Area2D = bullet_scene.instance();
+	
+	if(bullet_type && !is_player): # 1 = Koutei
+		bullet.modulate_Sprite_Color(GlobalData.kouteiColor);
+	
+	
 	var angle:float = (theta * i) + self.rotation + deg2rad(minRotation);
 	
 	if target_player_dir:
-		var diff = deg2rad(maxRotation - minRotation) / spawn_points;
+		var diff = deg2rad(maxRotation - minRotation) / spawnPoints;
 		
 		var playerdir = (GlobalData.get_player_node().position - self.global_position).normalized();
 		angle = (theta * i) + (playerdir.angle() - diff);
@@ -53,7 +57,7 @@ func instance_bullets(i:int, theta:float):
 		GlobalData.get_player_bullet_container().add_child(bullet);
 		
 		if(is_focused):
-			var t = ((PI/2) / spawn_points);
+			var t = ((PI/2) / spawnPoints);
 			angle = (t * i) + self.rotation + deg2rad(70);
 			angle = -angle;
 		
@@ -84,12 +88,22 @@ func instance_bullets(i:int, theta:float):
 	
 	GlobalData.bullet_array.append(bullet);
 
+func set_bullet_type(type:int):
+	self.bullet_type = type;
+
 func _on_Spawn_Timer_timeout():
 	spawnTimer.wait_time = spawnRate;
 	
 	var diff:int = maxRotation - minRotation;
 	var circ:float = deg2rad(diff);
-	var t:float = (circ / spawn_points);
+	var t:float = (circ / spawnPoints);
 	
-	for i in range(spawn_points):
+	for i in range(spawnPoints):
 		instance_bullets(i, t);
+
+
+func enable():
+	$SpawnTimer.start();
+
+func disable():
+	$SpawnTimer.stop();

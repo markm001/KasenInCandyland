@@ -1,8 +1,5 @@
 extends Node2D
 
-enum type {
-	Raijuu, Koutei
-}
 export var bullet_type:int = 0;
 
 export var speed_up:bool = false;
@@ -15,7 +12,7 @@ export var face_player:bool = false;
 export var facing_speed:float = 0.3;
 export var rotation_speed:int = 10;
 
-export var minRotation:int = 90;
+export var minRotation:int = 0;
 export var maxRotation:int = 360;
 
 export (PackedScene) var bullet_scene = preload("res://Scenes/Bullet_Timed.tscn");
@@ -41,10 +38,6 @@ export(int, 0, 720, 1) var height:int = 0;
 export(int, -360, 360, 10) var dist_bullet_rotation = -90;
 export var random_rotation = false;
 var j = 0;
-
-func _ready():
-	# ## DEBUG: REMOVE LATER!
-	$SpawnTimer.start();
 	
 func _process(delta):
 	if(rotating_spawner):
@@ -77,6 +70,9 @@ func _spawn_bullets() -> void:
 func instance_bullet(i:int, theta:float) -> Area2D:
 	var bullet:Area2D = bullet_scene.instance();
 	
+	if(bullet_type): # 1 = Koutei
+		bullet.modulate_Sprite_Color(GlobalData.kouteiColor);
+	
 	if(parentToSpawner):
 		$SpawnContainer.add_child(bullet);
 	else:
@@ -108,6 +104,8 @@ func speed_up_bullets(delta):
 	velocity = lerp(velocity, velocity + 40, delta*2);
 	spawnRate = lerp(spawnRate, 0.08, delta);
 
+func set_bullet_type(type:int):
+	self.bullet_type = type;
 
 func displace_spawner(point:Vector2, time:float) -> void:
 	displacementTween.interpolate_property(self, "global_position", global_position, point, time,Tween.TRANS_LINEAR);
@@ -115,3 +113,9 @@ func displace_spawner(point:Vector2, time:float) -> void:
 
 func _on_DisplacementTween_tween_all_completed():
 	position = Vector2.ZERO;
+
+func enable():
+	$SpawnTimer.start();
+
+func disable():
+	$SpawnTimer.stop();

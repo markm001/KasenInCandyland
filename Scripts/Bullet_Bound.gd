@@ -66,10 +66,24 @@ func delete():
 func set_Sprite(texture:Texture):
 	$Sprite.texture = texture;
 
+func modulate_Sprite_Color(color:Color):
+	$Sprite.self_modulate = color;
 
 func _on_Bullet_body_entered(body):
 	if(body.name == "Player"):
 		if(bullet_type == body.absorb_type):
 			GlobalData.increase_gauge(bullet_type);
+			match bullet_type:
+				0: #Raijuu
+					var burstEffect = GlobalData.get_raijuu_burst_effect().instance();
+					get_parent().add_child(burstEffect);
+					burstEffect.global_position = self.global_position;
+					var successParticles = GlobalData.get_success_effect().instance();
+				1: #Koutei
+					var burstEffect = GlobalData.get_koutei_burst_effect().instance();
+					get_parent().add_child(burstEffect);
+					burstEffect.global_position = self.global_position;
 		else:
 			GlobalData.reduce_gauge(bullet_type);
+			body.take_damage();
+		delete();
